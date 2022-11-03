@@ -94,7 +94,8 @@ module.exports = {
             const response = await Usuario.update({
                 firstName: firstName,
                 lastName: lastName,
-                email: email
+                email: email,
+                password:password
             }, {
                 where: { id: id }
             })
