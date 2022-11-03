@@ -8,11 +8,11 @@ const ValidationResult = (req, res, next) => {
         return next()
     } catch (error) {
 
-        endpointResponse({
-            res,
-            code:400,
-            message: error.array(),
-        })
+        return res.status(400).json({
+            code: 400,
+            status: false,
+            errors: error.array(),
+          })
     }
 }
     module.exports = { ValidationResult }

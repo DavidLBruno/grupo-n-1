@@ -56,7 +56,7 @@ module.exports = {
 
 
     update: catchAsync(async (req, res, next) => {
-        const { firstName, lastName, email } = req.body
+        const { firstName, lastName, email} = req.body
         const id = req.params.id
 
         try {
@@ -68,14 +68,29 @@ module.exports = {
             })
             if (!result) {
                 const httpError = createHttpError(
-                    statusCode = 400,
+                    statusCode = 404,
                     `[Error creating user] - [Users - Update]: This User does not exist in the database ${id} `,
                 )
                 next(httpError)
 
 
             }
-
+            if(req.body.password){
+                const password = await encrypt(req.body.password)
+                const response = await Usuario.update({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password:password
+                }, {
+                    where: { id: id }
+                })
+                endpointResponse({
+                    res,
+                    message: 'user update successfully',
+                    body: response,
+                })
+            }  
             const response = await Usuario.update({
                 firstName: firstName,
                 lastName: lastName,
@@ -88,7 +103,7 @@ module.exports = {
             endpointResponse({
                 res,
                 message: 'user update successfully',
-                body: req.body,
+                body: response,
             })
 
 
