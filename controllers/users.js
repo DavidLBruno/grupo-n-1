@@ -1,10 +1,8 @@
-const createHttpError = require('http-errors')
-const { catchAsync } = require('../helpers/catchAsync')
-const { Usuario } = require('../database/models')
-const { encrypt } = require('../middlewares/index')
-const { endpointResponse } = require('../helpers/success')
-
-
+const createHttpError = require("http-errors");
+const { catchAsync } = require("../helpers/catchAsync");
+const { Usuario } = require("../database/models");
+const { encrypt } = require("../middlewares/index");
+const { endpointResponse } = require("../helpers/success");
 
 module.exports = {
 
@@ -171,6 +169,34 @@ module.exports = {
 
         }
     }),
+
+    getUsers: catchAsync(async (req, res,next)=> {
+
+        try{
+
+            const users = await Usuario.findAll({
+                atributes:[
+                    'firstName',
+                    'lastName',
+                    'email',
+
+            ],
+            limit: 10
+            });
+            res.json(users);
+
+        } catch (error) {
+
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error listing users] - [Users - getUsers]: ${error.message} `,
+            )
+            next(httpError)
+
+
+        }
+
+    })
 
 
 
