@@ -1,9 +1,9 @@
 const express = require('express');
-const { create, listado, detail } = require('../controllers/users')
+const { create, detail, list } = require('../controllers/users')
 
 const router = express.Router();
 
-router.get("/",listado)
+router.get("/",list)
 router.get("/:id",detail)
 router.post("/create",create)
 

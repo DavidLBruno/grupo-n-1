@@ -9,32 +9,42 @@ const { endpointResponse } = require('../helpers/success')
 
 module.exports = {
 
-    listado: catchAsync(async (req, res, next) =>{
+    list: catchAsync(async (req, res, next) =>{
 
-        const lista = await Usuario.findAll()
-           endpointResponse({
-            res,
-            message: 'Lista de usuario successfully',
-            body: lista
-            });
-    }),
-
-    detail: catchAsync(async (req, res, next) =>{
         try{
-            let lista = await Usuario.findByPk(req.params.id).then(function (usuario) {
-                res.json({
-                  detalle: "A continuacion los detalles del usuario : "+usuario.firstName,
-                  data: usuario,
-                });
-              });
-
+        const list = await Usuario.findAll();
+        endpointResponse({
+          res,
+          message: "list the user successfully",
+          body: list,
+        });
         }catch (error) {
             const httpError = createHttpError(
                 error.statusCode,
-                `[Error Usuario no encontrado] - [Users - detail]: ${error.message} `,
+                `[Error List not found] - [Users - detail]: ${error.message} `,
             )
             next(httpError)
         }
+    }),
+    detail: catchAsync(async (req, res, next) =>{
+
+            await Usuario.findByPk(req.params.id)
+            .then(function (user) {
+                if(user){
+                    endpointResponse({
+                        res,
+                        message: 'Detail the user successfully',
+                        body: user
+                        });
+                }
+                else{
+                    const httpError = createHttpError(
+                        error.statusCode,
+                        `[Error user not found] - [Users - detail]: ${error.message} `,
+                    )
+                    next(httpError)
+                }
+              });
       }),
 
     create: catchAsync(async (req, res, next) => {
