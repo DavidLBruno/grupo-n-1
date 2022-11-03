@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/user', usersRouter);
 
-router.use('/transaction', transactionRouter);
+router.use('/transactions', transactionRouter);
 
 // example of a route with index controller get function
 //router.get('/', usersRouter)
