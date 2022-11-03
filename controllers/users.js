@@ -88,7 +88,10 @@ module.exports = {
                 endpointResponse({
                     res,
                     message: 'user update successfully',
-                    body: response,
+                    body: {firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        password:password},
                 })
             }  
             const response = await Usuario.update({
@@ -104,7 +107,10 @@ module.exports = {
             endpointResponse({
                 res,
                 message: 'user update successfully',
-                body: response,
+                body: {firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    }
             })
 
 
