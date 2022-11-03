@@ -50,8 +50,9 @@ module.exports = {
                     'firstName',
                     'lastName',
                     'email',
-                    
-            ]
+
+            ],
+            limit: 10
             });
             res.json(users);
 
