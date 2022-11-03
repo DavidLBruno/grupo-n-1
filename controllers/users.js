@@ -95,7 +95,7 @@ module.exports = {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                password:password
+                
             }, {
                 where: { id: id }
             })
