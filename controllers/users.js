@@ -11,26 +11,16 @@ module.exports = {
 
     listado: catchAsync(async (req, res, next) =>{
 
-            let lista = await Usuario.findAll()
-            .then((usuario => {
-                let array=[]
-                for(usuarios in usuario){
-                    array.push("Nombre: "+usuario[usuarios].firstName,
-                     " apellido: "+usuario[usuarios].lastName,
-                     " email: "+usuario[usuarios].email,
-                     " Fecha registro: "+usuario[usuarios].createdAt,
-                     "------------------------------"
-                     )
-                }
-            return res.json(array);
-               })
-            )
+        const lista = await Usuario.findAll()
+           endpointResponse({
+            res,
+            message: 'Lista de usuario successfully',
+            body: lista
+            });
     }),
 
     detail: catchAsync(async (req, res, next) =>{
-
         try{
-            
             let lista = await Usuario.findByPk(req.params.id).then(function (usuario) {
                 res.json({
                   detalle: "A continuacion los detalles del usuario : "+usuario.firstName,
@@ -38,13 +28,10 @@ module.exports = {
                 });
               });
 
-
-
         }catch (error) {
-
             const httpError = createHttpError(
                 error.statusCode,
-                `[Usuario no encontrado] `,
+                `[Error Usuario no encontrado] - [Users - detail]: ${error.message} `,
             )
             next(httpError)
         }
@@ -53,8 +40,6 @@ module.exports = {
     create: catchAsync(async (req, res, next) => {
 
         password = await encrypt(req.body.password)
-
-
 
         try {
             const response = await Usuario.create({
