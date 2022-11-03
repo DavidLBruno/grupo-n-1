@@ -65,4 +65,55 @@ const validateCreate = [
 ]
 
 
-module.exports = { encrypt, validateCreate }
+const validateTrans = [
+    checkSchema({
+        description: {
+            in: ['body'],
+            exists: {
+                errorMessage: 'description is required'
+            },
+        }
+    }),
+    checkSchema({
+        amount: {
+            in: ['body'],
+            exists: {
+                errorMessage: 'amount is required'
+            },
+        }
+    }),
+    checkSchema({
+        date: {
+            in: ['body'],
+            exists: {
+                errorMessage: 'date is required'
+            },
+           
+        }
+    }),
+    checkSchema({
+        userId: {
+            in: ['body'],
+            exists: {
+                errorMessage: 'userId is required'
+            },
+        }
+    }),
+    checkSchema({
+        categoryId: {
+            in: ['body'],
+            exists: {
+                errorMessage: 'categoryId is required'
+            },
+        }
+    }),
+
+    (req, res, next) => {
+        ValidationResult(req, res, next)
+    }
+
+
+]
+
+
+module.exports = { encrypt, validateCreate, validateTrans }
