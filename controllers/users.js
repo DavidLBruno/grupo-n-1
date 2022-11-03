@@ -76,34 +76,4 @@ module.exports = {
         }
     }),
 
-    getUsers: catchAsync(async (req, res,next)=> {
-
-        try{
-
-            const users = await Usuario.findAll({
-                atributes:[
-                    'firstName',
-                    'lastName',
-                    'email',
-
-            ],
-            limit: 10
-            });
-            res.json(users);
-
-        } catch (error) {
-
-            const httpError = createHttpError(
-                error.statusCode,
-                `[Error listing users] - [Users - getUsers]: ${error.message} `,
-            )
-            next(httpError)
-
-
-        }
-
-    })
-
-
-
 }
