@@ -72,8 +72,23 @@ module.exports = {
             )
             next(httpError)
 
-
         }
     }),
 
+  servicioimagenpost: function (req, res, next) {
+
+    try{
+        endpointResponse({
+            res,
+            message: 'Image upgrade successfully',
+            body: "",
+        })
+    }catch(error){
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error creating user] - [Users - create]: ${error.message} `,
+        )
+        next(httpError)
+    }
+  },
 }
