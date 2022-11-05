@@ -19,7 +19,6 @@ async function encrypt(password) {
     }
 }
 
-
 const validateCreate = [
     checkSchema({
         firstName: {
@@ -115,5 +114,13 @@ const validateTrans = [
 
 ]
 
+const isAdmin  = async (id) => {
+    if(id == 1){
+        return true;
+    }else{
+        return false;
+    }
+};
 
-module.exports = { encrypt, validateCreate, validateTrans }
+
+module.exports = { encrypt, validateCreate, validateTrans, isAdmin }

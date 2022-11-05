@@ -1,28 +1,36 @@
-const createHttpError = require('http-errors')
-const { catchAsync } = require('../helpers/catchAsync')
-const { Transnaction } = require('../database/models')
-const { endpointResponse } = require('../helpers/success')
-
+const { isAdmin } = require('../middlewares/index')
+const createHttpError = require('http-errors');
+const { catchAsync } = require('../helpers/catchAsync');
+const { Transnaction } = require('../database/models');
+const { endpointResponse } = require('../helpers/success');
 
 
 const getTransaction = async (req, res, next) => {
     try {
-        const response = await Transnaction.findAll()
-        endpointResponse({
-            res,
-            message: 'Transaction successfully',
-            body: response,
-        })
+            const { id } = req.query;
+            const admin = await isAdmin(id);
 
-        if (response.length) {
-            endpointResponse({
-                res,
-                message: 'Transaction successfully',
-                body: response,
-            })
-        } else {
-            throw Error('Tranasaction not found');
-        }
+            if(!isNaN(id) && admin){
+
+                const response = await Transnaction.findAll();
+                endpointResponse({
+                    res,
+                    message: 'Transaction successfully',
+                    body: response,
+                });
+                if(response.length){
+                    endpointResponse({
+                        res,
+                        message: 'Transaction successfully',
+                        body: response,
+                    });
+                }else{
+                    throw Error('Tranasaction not found');
+                }
+
+            }else{
+                throw Error('You are not a admin');
+            }
 
     } catch (error) {
         const httpError = createHttpError(
@@ -41,11 +49,20 @@ const getTransactionById = async (req, res, next) => {
             throw Error('Id is not a number');
         }
 
-        const response = await Transnaction.findAll({
-            where: {
-                id,
+            const response = await Transnaction.findAll({
+                where: {
+                    id,
+                }
+            });
+            if(response.length){
+                endpointResponse({
+                    res,
+                    message: 'Transaction successfully',
+                    body: response,
+                });
+            }else{
+                throw Error('Tranasaction not found');
             }
-        });
         if (response.length) {
             endpointResponse({
                 res,
