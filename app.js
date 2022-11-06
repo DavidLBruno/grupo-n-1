@@ -4,6 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const indexRouter = require('./routes/index')
@@ -41,5 +42,22 @@ app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Servidor funcionando en el puerto ${port}`)
 })
+
+function verifyToken(req, res, next) {
+  jwt.verify(
+    req.headers["x-access-token"],
+    req.app.get("secretKey"),
+    function (err, decode) {
+      if (err) {
+        res.json({ message: err.message });
+      } else {
+        console.log(decode);
+        next();
+      }
+    }
+  );
+}
+
+app.verifyToken = verifyToken;
 
 module.exports = app
