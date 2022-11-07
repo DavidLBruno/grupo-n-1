@@ -2,35 +2,41 @@ const { isAdmin } = require('../middlewares/index')
 const createHttpError = require('http-errors');
 const { catchAsync } = require('../helpers/catchAsync');
 const { Transnaction } = require('../database/models');
+const { getPaginatedData } = require("../middlewares/index");
 const { endpointResponse } = require('../helpers/success');
 
 
 const getTransaction = async (req, res, next) => {
     try {
-            const { id } = req.query;
-            const admin = await isAdmin(id);
+        const { id } = req.query;
+        const admin = await isAdmin(id);
 
-            if(!isNaN(id) && admin){
-
-                const response = await Transnaction.findAll();
-                endpointResponse({
-                    res,
-                    message: 'Transaction successfully',
-                    body: response,
-                });
-                if(response.length){
-                    endpointResponse({
-                        res,
-                        message: 'Transaction successfully',
-                        body: response,
-                    });
-                }else{
-                    throw Error('Tranasaction not found');
-                }
-
-            }else{
-                throw Error('You are not a admin');
+        if(!isNaN(id) && admin){
+            const model = await getPaginatedData(req, Transnaction);
+            if (model == null){
+                const httpError = createHttpError(400, `Invalid Parameter. Page should be a positive number equal or higher to 1.` );
+                next(httpError);
             }
+            // TODO: REMOVE when admin feature is done
+            if (model.nextPage.indexOf('?') > 0){
+                model.nextPage = model.nextPage.concat('&id='+id)
+            }
+            if (model.prevPage.indexOf('?') > 0){
+                model.prevPage= model.prevPage.concat('&id='+id)
+            }
+            endpointResponse({
+                res,
+                message: "Transactions listed successfully",
+                body: {
+                    result : model.list,
+                    nextPage: model.nextPage,
+                    prevPage: model.prevPage
+                },
+            })
+        }else{
+            const httpError = createHttpError(401,`Unauthorized.`);
+            next(httpError);
+        }
 
     } catch (error) {
         const httpError = createHttpError(
@@ -84,7 +90,6 @@ const getTransactionById = async (req, res, next) => {
 const createTransaction = async (req, res, next) => {
     try {
         const { userId, categoryId, amount, description, date } = req.body;
-        console.log(req.body);
         const newTransaction = await Transnaction.create({
             userId: userId,
             categoryId: categoryId,
