@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       Usuario.belongsTo(models.Role,{
+        as: "rol",
         foreignKey:'id',
         target_Key:'roleId'
       });

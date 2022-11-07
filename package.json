@@ -12,7 +12,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "npx nodemon index.js",
-    "test": "mocha ./test/*.js"
+    "test": "mocha ./test/*.js",
+    "reset:db": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
   },
   "engines": {
     "node": ">=0.14"
