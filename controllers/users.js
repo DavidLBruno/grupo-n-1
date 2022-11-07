@@ -214,7 +214,6 @@ module.exports = {
     }),
 
   servicioimagenpost: function (req, res, next) {
-
     try{
         endpointResponse({
             res,
@@ -229,9 +228,4 @@ module.exports = {
         next(httpError)
     }
   },
-}
-    })
-
-
-
 }
