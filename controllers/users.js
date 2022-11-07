@@ -156,7 +156,6 @@ module.exports = {
                     }
             })
 
-
         } catch (error) {
 
             const httpError = createHttpError(
@@ -230,4 +229,9 @@ module.exports = {
         next(httpError)
     }
   },
+}
+    })
+
+
+
 }
