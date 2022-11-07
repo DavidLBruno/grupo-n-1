@@ -156,7 +156,6 @@ module.exports = {
                     }
             })
 
-
         } catch (error) {
 
             const httpError = createHttpError(
@@ -215,7 +214,6 @@ module.exports = {
     }),
 
   servicioimagenpost: function (req, res, next) {
-
     try{
         endpointResponse({
             res,
