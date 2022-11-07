@@ -9,7 +9,14 @@ module.exports = {
     list: catchAsync(async (req, res, next) =>{
 
         try{
-        const list = await Usuario.findAll();
+        const list = await Usuario.findAll({
+            atributes:[
+                'firstName',
+                'lastName',
+                'email',
+                'createdAt'
+            ]
+        });
         endpointResponse({
           res,
           message: "list the user successfully",
@@ -204,38 +211,23 @@ module.exports = {
             )
             next(httpError)
 
-
         }
     }),
 
-    getUsers: catchAsync(async (req, res,next)=> {
+  servicioimagenpost: function (req, res, next) {
 
-        try{
-
-            const users = await Usuario.findAll({
-                atributes:[
-                    'firstName',
-                    'lastName',
-                    'email',
-
-            ],
-            limit: 10
-            });
-            res.json(users);
-
-        } catch (error) {
-
-            const httpError = createHttpError(
-                error.statusCode,
-                `[Error listing users] - [Users - getUsers]: ${error.message} `,
-            )
-            next(httpError)
-
-
-        }
-
-    })
-
-
-
+    try{
+        endpointResponse({
+            res,
+            message: 'Image upgrade successfully',
+            body: "",
+        })
+    }catch(error){
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error creating user] - [Users - create]: ${error.message} `,
+        )
+        next(httpError)
+    }
+  },
 }
