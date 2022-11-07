@@ -109,8 +109,6 @@ const validateTrans = [
     (req, res, next) => {
         ValidationResult(req, res, next)
     }
-
-
 ]
 const isAdmin  = async (id) => {
     if(id == 1){
@@ -119,7 +117,6 @@ const isAdmin  = async (id) => {
         return false;
     }
 };
-
 async function getPaginatedData(req, db) {
     
     let page = +req.query.page;
@@ -141,14 +138,20 @@ async function getPaginatedData(req, db) {
         prevPage = "No hay paguina anterior para mostrar"
     }
 
-    let list = await db.findAll({limit: 10 ,offset:offset})
+    let list = await db.findAll({limit: 10 ,offset:offset}).then({
+        atributes:[
+            'firstName',
+            'lastName',
+            'email',
+            'createdAt'
+        ]
+    })
 
     if(offset+10 > usuarios){
         nextPage="No hay paguina siguiente"
     }   
     return {list, nextPage, prevPage}
 }
-
 
 
 module.exports = { encrypt, validateCreate, validateTrans, isAdmin, getPaginatedData }

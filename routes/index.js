@@ -9,5 +9,4 @@ router.use("/categories", categoriesRouter);
 
 router.use('/transactions', transactionRouter);
 
-
 module.exports = router;
