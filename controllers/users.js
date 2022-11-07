@@ -1,34 +1,35 @@
 const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
-const { encrypt } = require("../middlewares/index");
+const { encrypt, getPaginatedData } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
 
 module.exports = {
 
     list: catchAsync(async (req, res, next) =>{
-
         try{
-        const list = await Usuario.findAll({
-            atributes:[
-                'firstName',
-                'lastName',
-                'email',
-                'createdAt'
-            ]
-        });
-        endpointResponse({
-          res,
-          message: "list the user successfully",
-          body: list,
-        });
-        }catch (error) {
-            const httpError = createHttpError(
-                error.statusCode,
-                `[Error List not found] - [Users - detail]: ${error.message} `,
-            )
-            next(httpError)
-        }
+            const model = await getPaginatedData(req, Usuario);
+            if (model == null){
+                const httpError = createHttpError(400, `Invalid Parameter. Page should be a positive number equal or higher to 1.` );
+                next(httpError);
+            }
+            endpointResponse({
+              res,
+              message: "list the user successfully",
+              body: {
+                result : model.list,
+                nextPage: model.nextPage,
+                prevPage: model.prevPage
+            },
+            })        
+            }catch (error) {
+                const httpError = createHttpError(
+                    error.statusCode,
+                    ` ${error.message} `,
+                )
+                next(httpError)
+            }
+
     }),
     detail: catchAsync(async (req, res, next) =>{
 
@@ -156,7 +157,6 @@ module.exports = {
                     }
             })
 
-
         } catch (error) {
 
             const httpError = createHttpError(
@@ -215,7 +215,6 @@ module.exports = {
     }),
 
   servicioimagenpost: function (req, res, next) {
-
     try{
         endpointResponse({
             res,
