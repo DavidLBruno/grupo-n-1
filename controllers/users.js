@@ -9,7 +9,14 @@ module.exports = {
     list: catchAsync(async (req, res, next) =>{
 
         try{
-        const list = await Usuario.findAll();
+        const list = await Usuario.findAll({
+            atributes:[
+                'firstName',
+                'lastName',
+                'email',
+                'createdAt'
+            ]
+        });
         endpointResponse({
           res,
           message: "list the user successfully",
