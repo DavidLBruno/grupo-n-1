@@ -1,9 +1,12 @@
-const express = require('express')
-const { get } = require('../controllers/index')
+const express = require("express");
+const usersRouter = require("./users");
+const categoriesRouter = require("./categories");
+const transactionRouter = require('./transactions');
+const router = express.Router();
 
-const router = express.Router()
+router.use("/user", usersRouter);
+router.use("/categories", categoriesRouter);
 
-// example of a route with index controller get function
-router.get('/', get)
+router.use('/transactions', transactionRouter);
 
-module.exports = router
+module.exports = router;
