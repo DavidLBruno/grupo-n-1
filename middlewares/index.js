@@ -138,14 +138,7 @@ async function getPaginatedData(req, db) {
         prevPage = "No hay paguina anterior para mostrar"
     }
 
-    let list = await db.findAll({limit: 10 ,offset:offset}).then({
-        atributes:[
-            'firstName',
-            'lastName',
-            'email',
-            'createdAt'
-        ]
-    })
+    let list = await db.findAll({limit: 10 ,offset:offset})
 
     if(offset+10 > usuarios){
         nextPage="No hay paguina siguiente"
