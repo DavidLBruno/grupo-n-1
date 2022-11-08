@@ -100,7 +100,7 @@ const createTransaction = async (req, res, next) => {
 
         if (!newTransaction) {
             throw Error('An unexpected error occurred');
-        }
+        };
 
         endpointResponse({
             res,
