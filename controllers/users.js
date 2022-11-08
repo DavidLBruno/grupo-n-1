@@ -1,10 +1,101 @@
 const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
-const { encrypt, getPaginatedData } = require("../middlewares/index");
+const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
+const {authResponse,providerResponse,deleteCookie} = require("../helpers/authResponse");
 
 module.exports = {
+
+
+    login:catchAsync(async (req, res, next) =>{
+        try {
+            const {email,password} = req.body
+
+            const user = await Usuario.findOne({
+                where: {
+                    email: email
+                }
+            })
+            if(!user){
+                const httpError = createHttpError(
+                    statusCode = 400,
+                    `[Error Login user] - [Users - Login]: the user does not exist in the database ${email} `,
+                )
+                next(httpError)
+            }
+            const result = await compare(password,user.password)
+            if(!result){
+                const httpError = createHttpError(
+                    statusCode = 400,
+                    `[Error Login user] - [Users - Login]: Password is incorrect `,
+                )
+                next(httpError)
+            }
+            const userData = {
+                id:user.id,
+                firstName:user.firstName,
+                lastName:user.lastName,
+                email:user.email
+            }
+
+            const login = await jwtcreate(userData)
+            return authResponse(res,login,401)
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error Login user] - [Users - Login]: ${error.message} `,
+            )
+            next(httpError)
+        }
+       
+    }),
+    
+    create: catchAsync(async (req, res, next) => {
+        const { firstName, lastName, email } = req.body
+
+        try {
+            const user = await Usuario.findOne({
+                where: {
+                    email: email
+                }
+            })
+            if (user) {
+                const httpError = createHttpError(
+                    statusCode = 400,
+                    `[Error creating user] - [Users - create]: There is already a user with that email ${email} `,
+                )
+                next(httpError)
+
+
+            }
+            const password = await encrypt(req.body.password)
+            const response = await Usuario.create({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password
+
+            })
+
+            endpointResponse({
+                res,
+                message: 'user created successfully',
+                body: response,
+            })
+
+
+        } catch (error) {
+
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error creating user] - [Users - create]: ${error.message} `,
+            )
+            next(httpError)
+
+
+        }
+    }),
 
     list: catchAsync(async (req, res, next) =>{
         try{
@@ -52,50 +143,7 @@ module.exports = {
               
       }),
 
-    create: catchAsync(async (req, res, next) => {
-        const { firstName, lastName, email } = req.body
-
-        try {
-            const existemail = await Usuario.findOne({
-                where: {
-                    email: email
-                }
-            })
-            if (existemail) {
-                const httpError = createHttpError(
-                    statusCode = 400,
-                    `[Error creating user] - [Users - create]: There is already a user with that email ${email} `,
-                )
-                next(httpError)
-
-
-            }
-            const password = await encrypt(req.body.password)
-            const response = await Usuario.create({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password
-
-            })
-            endpointResponse({
-                res,
-                message: 'user created successfully',
-                body: response,
-            })
-
-
-        } catch (error) {
-
-            const httpError = createHttpError(
-                error.statusCode,
-                `[Error creating user] - [Users - create]: ${error.message} `,
-            )
-            next(httpError)
-
-
-        }
-    }),
+   
 
 
     update: catchAsync(async (req, res, next) => {
