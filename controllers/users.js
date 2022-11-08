@@ -44,8 +44,7 @@ module.exports = {
                 }
                 else{
                     const httpError = createHttpError(
-                        error.statusCode,
-                        `[Error user not found] - [Users - detail]: ${error.message} `,
+                        404, `[Error user not found] - [Users - detail]`,
                     )
                     next(httpError)
                 }

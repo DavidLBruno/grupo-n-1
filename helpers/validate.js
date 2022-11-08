@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator')
-const { endpointResponse } = require('../helpers/success')
+const { endpointResponse } = require('./helpers/success')
 
 const ValidationResult = (req, res, next) => {
 
