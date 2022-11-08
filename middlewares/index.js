@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt")
 const createHttpError = require('http-errors')
 const { checkSchema } = require('express-validator')
 const { ValidationResult } = require('../helpers/validate')
+const jwt = require("jsonwebtoken")
+const { development } = require("../config/config")
+
 
 async function encrypt(password) {
     try {
@@ -15,6 +18,54 @@ async function encrypt(password) {
             `[Failed to encrypt password] - [middleware]: ${error.message}`,
         )
         next(httpError)
+    }
+}
+
+async function compare(string,hash){
+    try {
+        return await bcrypt.compare(string,hash)
+    } catch (error) {
+        return false
+    }
+}
+
+async function jwtcreate(userData){
+    const token = jwt.sign(userData,development.jwtSecret,{
+        expiresIn:'1d'
+    })
+    return {
+        success:true,
+        user:userData,
+        token
+    }
+}
+function validateToken(req,res,next){
+    const token = req.cookies.token
+
+    if(!token){
+        return res.status(403).json({
+            success:false,
+            message:"A token is required for this process"
+        })
+    }
+
+    return verifyToken(token,req,res,next)
+}
+
+function verifyToken(token,req,res,next){
+    try{
+        const decoded = jwt.verify(token,development.jwtSecret)
+        delete decoded.iat
+        delete decoded.exp
+        req.user = decoded
+
+        return next()
+    }catch({message,name}){
+        return res.status(403).json({
+            success:false,
+            message,
+            type:name
+        })
     }
 }
 
@@ -147,4 +198,4 @@ async function getPaginatedData(req, db) {
 }
 
 
-module.exports = { encrypt, validateCreate, validateTrans, isAdmin, getPaginatedData }
+module.exports = { encrypt, validateCreate, validateTrans, isAdmin, getPaginatedData,jwtcreate,compare,validateToken }
