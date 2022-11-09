@@ -2,6 +2,7 @@ const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Category } = require("../database/models");
 const { endpointResponse } = require("../helpers/success");
+const { ErrorObject } = require("../helpers/error");
 
 module.exports = {
   getCategories: catchAsync(async (_req, res, next) => {
@@ -43,7 +44,7 @@ module.exports = {
     const { id } = req.params;
     try {
       const category = await Category.findByPk(id);
-      if (!category) throw Error("The category doesn't exist!");
+      if (!category) throw new ErrorObject("The category doesn't exist!",404);
       endpointResponse({
         res,
         message: `Category #${id}`,
@@ -62,7 +63,7 @@ module.exports = {
     const { name, description } = req.body;
     try {
       const category = await Category.findByPk(id);
-      if (!category) throw Error("The category doesn't exist!");
+      if (!category) throw new ErrorObject("The category doesn't exist!",404);
 
       category.update({ name, description });
       await category.save();
@@ -85,7 +86,7 @@ module.exports = {
     const { id } = req.params;
     try {
       const category = await Category.findByPk(id);
-      if (!category) throw Error("The category doesn't exist!");
+      if (!category) throw new ErrorObject("The category doesn't exist!",404);
       await category.destroy();
       endpointResponse({
         res,
