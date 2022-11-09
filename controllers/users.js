@@ -261,19 +261,17 @@ module.exports = {
         }
     }),
 
-  servicioimagenpost: function (req, res, next) {
-    try{
-        endpointResponse({
+    servicioimagenpost: catchAsync((req, res, next) => {
+
+     endpointResponse({
             res,
             message: 'Image upgrade successfully',
             body: "",
         })
-    }catch(error){
         const httpError = createHttpError(
             error.statusCode,
             `[Error creating user] - [Users - create]: ${error.message} `,
         )
         next(httpError)
-    }
-  },
+    })
 }

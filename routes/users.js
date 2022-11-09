@@ -5,7 +5,6 @@ const { validateCreate, validateToken } = require('../middlewares/index')
 
 const router = express.Router();
 
-
 router.get("/",validateToken, list)
 router.get("/:id",detail)
 router.post("/create",validateCreate,create)

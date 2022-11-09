@@ -36,7 +36,7 @@ app.use(multer({
   storage,
    dest: path.join(__dirname, "public/images"),
    fileFilter:(req,file,cb)=>{
-    const filetypes = /jpg|png|svg|webp/;
+    const filetypes = /image|png|jpg|svg|webp/;
     const mimetype = filetypes.test(file.mimetype);
     const extname = filetypes.test(path.extname(file.originalname))
     if(mimetype && extname){
@@ -45,7 +45,6 @@ app.use(multer({
     cb("Debe ser una imagen valida")
    }
 }).single("image"))
-
 
 
 app.use('/', indexRouter)
@@ -66,10 +65,14 @@ app.use((err, req, res) => {
   res.render('error')
 })
 
+
 app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Servidor funcionando en el puerto ${port}`)
+  
 })
+
+
 
 function verifyToken(req, res, next) {
   jwt.verify(
