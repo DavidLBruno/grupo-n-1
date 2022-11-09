@@ -2,6 +2,24 @@
 const {
   Model
 } = require('sequelize');
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   Role:
+ *    type: object
+ *    properties:
+ *      id:
+ *        type: integer
+ *        format: int64
+ *        example: 10
+ *      name:
+ *        type: string
+ *        example: administrador
+ *      description:
+ *        type: string
+ *        example: sos admin
+ */
 module.exports = (sequelize, DataTypes) => {
   class Role extends Model {
     /**
