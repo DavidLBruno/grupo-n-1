@@ -3,7 +3,6 @@ const usersRouter = require("./users");
 const categoriesRouter = require("./categories");
 const transactionRouter = require("./transactions");
 const router = express.Router();
-
 const swaggerUI = require("swagger-ui-express");
 const options = require("../middlewares/swagger");
 

@@ -40,14 +40,11 @@ app.use((err, req, res) => {
   res.render('error')
 })
 
-
 app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Servidor funcionando en el puerto ${port}`)
   
 })
-
-
 
 function verifyToken(req, res, next) {
   jwt.verify(

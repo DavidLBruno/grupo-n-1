@@ -77,7 +77,6 @@ module.exports = {
                 password: password
 
             })
-
             endpointResponse({
                 res,
                 message: 'user created successfully',
@@ -123,23 +122,31 @@ module.exports = {
 
     }),
     detail: catchAsync(async (req, res, next) =>{
-
-            await Usuario.findByPk(req.params.id)
-            .then(function (user) {
-                if(user){
-                    endpointResponse({
-                        res,
-                        message: 'Detail the user successfully',
-                        body: user
-                        });
-                }
-                else{
-                    const httpError = createHttpError(
-                        404, `[Error user not found] - [Users - detail]`,
-                    )
-                    next(httpError)
-                }
-              });
+            try{
+                await Usuario.findByPk(req.params.id)
+                .then(function (user) {
+                    if(user){
+                        endpointResponse({
+                            res,
+                            message: 'Detail the user successfully',
+                            body: user
+                            });
+                    }
+                    else{
+                        const httpError = createHttpError(
+                            404, `[Error user not found] - [Users - detail]`,
+                        )
+                        next(httpError)
+                    }
+                  });
+            }
+            catch(error){
+                const httpError = createHttpError(
+                    error.statusCode,
+                    ` ${error.message} `,
+                )
+                next(httpError)
+            }
               
       }),
 
