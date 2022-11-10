@@ -1,67 +1,66 @@
 const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
-const { encrypt } = require("../middlewares/index");
+const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
+const {authResponse,providerResponse,deleteCookie} = require("../helpers/authResponse");
 
 module.exports = {
 
-    list: catchAsync(async (req, res, next) =>{
 
-        try{
-        const list = await Usuario.findAll({
-            atributes:[
-                'firstName',
-                'lastName',
-                'email',
-                'createdAt'
-            ]
-        });
-        endpointResponse({
-          res,
-          message: "list the user successfully",
-          body: list,
-        });
-        }catch (error) {
-            const httpError = createHttpError(
-                error.statusCode,
-                `[Error List not found] - [Users - detail]: ${error.message} `,
-            )
-            next(httpError)
-        }
-    }),
-    detail: catchAsync(async (req, res, next) =>{
-
-            await Usuario.findByPk(req.params.id)
-            .then(function (user) {
-                if(user){
-                    endpointResponse({
-                        res,
-                        message: 'Detail the user successfully',
-                        body: user
-                        });
-                }
-                else{
-                    const httpError = createHttpError(
-                        error.statusCode,
-                        `[Error user not found] - [Users - detail]: ${error.message} `,
-                    )
-                    next(httpError)
-                }
-              });
-              
-      }),
-
-    create: catchAsync(async (req, res, next) => {
-        const { firstName, lastName, email } = req.body
-
+    login:catchAsync(async (req, res, next) =>{
         try {
-            const existemail = await Usuario.findOne({
+            const {email,password} = req.body
+
+            const user = await Usuario.findOne({
                 where: {
                     email: email
                 }
             })
-            if (existemail) {
+            if(!user){
+                const httpError = createHttpError(
+                    statusCode = 400,
+                    `[Error Login user] - [Users - Login]: the user does not exist in the database ${email} `,
+                )
+                next(httpError)
+            }
+            const result = await compare(password,user.password)
+            if(!result){
+                const httpError = createHttpError(
+                    statusCode = 400,
+                    `[Error Login user] - [Users - Login]: Password is incorrect `,
+                )
+                next(httpError)
+            }
+            const userData = {
+                id:user.id,
+                firstName:user.firstName,
+                lastName:user.lastName,
+                email:user.email
+            }
+
+            const login = await jwtcreate(userData)
+            return authResponse(res,login,401)
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error Login user] - [Users - Login]: ${error.message} `,
+            )
+            next(httpError)
+        }
+       
+    }),
+    
+    create: catchAsync(async (req, res, next) => {
+        const { firstName, lastName, email } = req.body
+
+        try {
+            const user = await Usuario.findOne({
+                where: {
+                    email: email
+                }
+            })
+            if (user) {
                 const httpError = createHttpError(
                     statusCode = 400,
                     `[Error creating user] - [Users - create]: There is already a user with that email ${email} `,
@@ -96,6 +95,62 @@ module.exports = {
 
         }
     }),
+
+    list: catchAsync(async (req, res, next) =>{
+        try{
+            const model = await getPaginatedData(req, Usuario);
+            if (model == null){
+                const httpError = createHttpError(400, `Invalid Parameter. Page should be a positive number equal or higher to 1.` );
+                next(httpError);
+            }
+            endpointResponse({
+              res,
+              message: "list the user successfully",
+              body: {
+                result : model.list,
+                nextPage: model.nextPage,
+                prevPage: model.prevPage
+            },
+            })        
+            }catch (error) {
+                const httpError = createHttpError(
+                    error.statusCode,
+                    ` ${error.message} `,
+                )
+                next(httpError)
+            }
+
+    }),
+    detail: catchAsync(async (req, res, next) =>{
+            try{
+                await Usuario.findByPk(req.params.id)
+                .then(function (user) {
+                    if(user){
+                        endpointResponse({
+                            res,
+                            message: 'Detail the user successfully',
+                            body: user
+                            });
+                    }
+                    else{
+                        const httpError = createHttpError(
+                            404, `[Error user not found] - [Users - detail]`,
+                        )
+                        next(httpError)
+                    }
+                  });
+            }
+            catch(error){
+                const httpError = createHttpError(
+                    error.statusCode,
+                    ` ${error.message} `,
+                )
+                next(httpError)
+            }
+              
+      }),
+
+   
 
 
     update: catchAsync(async (req, res, next) => {
@@ -156,7 +211,6 @@ module.exports = {
                     }
             })
 
-
         } catch (error) {
 
             const httpError = createHttpError(
@@ -214,20 +268,17 @@ module.exports = {
         }
     }),
 
-  servicioimagenpost: function (req, res, next) {
+    servicioimagenpost: catchAsync((req, res, next) => {
 
-    try{
-        endpointResponse({
+     endpointResponse({
             res,
             message: 'Image upgrade successfully',
             body: "",
         })
-    }catch(error){
         const httpError = createHttpError(
             error.statusCode,
             `[Error creating user] - [Users - create]: ${error.message} `,
         )
         next(httpError)
-    }
-  },
+    })
 }
