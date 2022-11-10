@@ -8,7 +8,7 @@ const {
   servicioimagenpost,
   login,
 } = require("../controllers/users");
-const { validateCreate, validateToken } = require("../middlewares/index");
+const { validateCreate, validateToken, imagen } = require("../middlewares/index");
 
 const router = express.Router();
 
@@ -229,6 +229,6 @@ router.post("/login", login);
  *        description: The user doesn't exist!
  */
 router.delete("/delete/:id", deleteU);
-router.post("/imagen", servicioimagenpost);
+router.post("/imagen", imagen ,servicioimagenpost);
 
 module.exports = router;
