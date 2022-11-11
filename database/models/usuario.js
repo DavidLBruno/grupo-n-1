@@ -7,10 +7,10 @@ const { Model } = require("sequelize");
  *     description: Operations about user
  * components:
  *  securitySchemes:
- *    bearerAuth:
- *      type: http
- *      scheme: bearer
- *      bearerFormat: JWT
+ *    api_key:
+ *     type: apiKey
+ *     name: JWT_SECRET
+ *     in: cookie
  *  responses:
  *    UnauthorizedError:
  *      description: Access token is missing or invalid
