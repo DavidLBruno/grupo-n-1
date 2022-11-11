@@ -6,6 +6,8 @@ const {
   updateTransactionById,
   deleteTransaction,
 } = require("../controllers/transactions");
+const { validateToken } = require("../middlewares/index");
+const { checkOwnwerTransaction } = require("../middlewares/ownership")
 
 const router = express.Router();
 
@@ -14,12 +16,12 @@ const router = express.Router();
  * /transactions:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Finds all Transactions
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -61,16 +63,16 @@ const router = express.Router();
  *                        type: integer
  *                        format: int64
  *                        example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
  */
-router.get("/", getTransaction);
+router.get("/", validateToken, getTransaction);
 /**
  * @swagger
  * /transactions:
  *  post:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Make a new Transaction
@@ -144,21 +146,21 @@ router.get("/", getTransaction);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
  *      "404":
  *        description: The transaction doesn't exist!
- *      "405":
+ *      405:
  *        description: Invalid input
  */
-router.post("/", createTransaction);
+router.post("/", validateToken, createTransaction);
 
 /**
  * @swagger
  * /transactions/{id}:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Finds Transactions by id
@@ -171,7 +173,7 @@ router.post("/", createTransaction);
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -217,21 +219,21 @@ router.post("/", createTransaction);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.get("/:id", getTransactionById);
+router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
 
 /**
  * @swagger
  * /transactions/{id}:
  *  put:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Update Transaction by id
@@ -273,7 +275,7 @@ router.get("/:id", getTransactionById);
  *                example: 1
  *      required: true
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -319,20 +321,20 @@ router.get("/:id", getTransactionById);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.put("/:id", updateTransactionById);
+router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById);
 /**
  * @swagger
  * /transactions/{id}:
  *  delete:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Delete Transactions by id
@@ -345,7 +347,7 @@ router.put("/:id", updateTransactionById);
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -391,13 +393,13 @@ router.put("/:id", updateTransactionById);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.delete("/:id", deleteTransaction);
+router.delete("/:id", validateToken, deleteTransaction);
 
 module.exports = router;
