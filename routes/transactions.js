@@ -6,6 +6,8 @@ const {
   updateTransactionById,
   deleteTransaction,
 } = require("../controllers/transactions");
+const { validateToken } = require("../middlewares/index");
+const { checkOwnwerTransaction } = require("../middlewares/ownership")
 
 const router = express.Router();
 
@@ -64,7 +66,7 @@ const router = express.Router();
  *      "401":
  *        $ref: "#/components/responses/UnauthorizedError"
  */
-router.get("/", getTransaction);
+router.get("/", validateToken, getTransaction);
 /**
  * @swagger
  * /transactions:
@@ -151,7 +153,7 @@ router.get("/", getTransaction);
  *      "405":
  *        description: Invalid input
  */
-router.post("/", createTransaction);
+router.post("/", validateToken, createTransaction);
 
 /**
  * @swagger
@@ -224,7 +226,7 @@ router.post("/", createTransaction);
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.get("/:id", getTransactionById);
+router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
 
 /**
  * @swagger
@@ -326,7 +328,7 @@ router.get("/:id", getTransactionById);
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.put("/:id", updateTransactionById);
+router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById);
 /**
  * @swagger
  * /transactions/{id}:
@@ -398,6 +400,6 @@ router.put("/:id", updateTransactionById);
  *      "404":
  *        description: The transaction doesn't exist!
  */
-router.delete("/:id", deleteTransaction);
+router.delete("/:id", validateToken, deleteTransaction);
 
 module.exports = router;

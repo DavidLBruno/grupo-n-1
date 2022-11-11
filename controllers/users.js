@@ -3,7 +3,7 @@ const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
 const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
-const {authResponse,providerResponse,deleteCookie} = require("../helpers/authResponse");
+const {authResponse } = require("../helpers/authResponse");
 
 module.exports = {
 
