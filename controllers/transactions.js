@@ -1,6 +1,5 @@
 const { isAdmin } = require('../middlewares/index')
 const createHttpError = require('http-errors');
-const { catchAsync } = require('../helpers/catchAsync');
 const { Transnaction } = require('../database/models');
 const { getPaginatedData } = require("../middlewares/index");
 const { endpointResponse } = require('../helpers/success');
@@ -10,6 +9,11 @@ const getTransaction = async (req, res, next) => {
     try {
         const { id } = req.query;
         const admin = await isAdmin(id);
+        const userTransactions = await Transnaction.findAll({
+            where: {
+                userId: id
+            }
+        })
 
         if(!isNaN(id) && admin){
             const model = await getPaginatedData(req, Transnaction);
@@ -33,7 +37,15 @@ const getTransaction = async (req, res, next) => {
                     prevPage: model.prevPage
                 },
             })
-        }else{
+        } else if (!isNaN(id) && userTransactions.length) {
+            endpointResponse({
+                res,
+                message: "Transactions listed successfully",
+                body: {
+                    userTransactions
+                }
+            })
+        } else {
             const httpError = createHttpError(401,`Unauthorized.`);
             next(httpError);
         }
@@ -54,22 +66,9 @@ const getTransactionById = async (req, res, next) => {
         if (isNaN(id)) {
             throw Error('Id is not a number');
         }
+        const response = await Transnaction.findByPk(id);
 
-            const response = await Transnaction.findAll({
-                where: {
-                    id,
-                }
-            });
-            if(response.length){
-                endpointResponse({
-                    res,
-                    message: 'Transaction successfully',
-                    body: response,
-                });
-            }else{
-                throw Error('Tranasaction not found');
-            }
-        if (response.length) {
+        if (response) {
             endpointResponse({
                 res,
                 message: 'Transaction successfully',
@@ -89,18 +88,18 @@ const getTransactionById = async (req, res, next) => {
 
 const createTransaction = async (req, res, next) => {
     try {
-        const { userId, categoryId, amount, description, date } = req.body;
+        const { userId, categoryId, amount, description } = req.body;
         const newTransaction = await Transnaction.create({
-            userId: userId,
-            categoryId: categoryId,
-            amount: amount,
-            description: description,
-            date: date
+            userId,
+            categoryId,
+            amount,
+            description,
+            date: new Date(Date.now())
         });
 
         if (!newTransaction) {
             throw Error('An unexpected error occurred');
-        }
+        };
 
         endpointResponse({
             res,
@@ -123,12 +122,10 @@ const updateTransactionById = async (req, res, next) => {
         const transaction = await Transnaction.findByPk(transactionId);
 
         if (transaction) {
-            const { userId, categoryId, amount, description } = req.body;
-            const editedTransaction = await Transnaction.update({
-                userId: userId,
-                categoryId: categoryId,
-                amount: amount,
-                description: description,
+            const { categoryId, description } = req.body;
+            await Transnaction.update({
+                categoryId,
+                description,
                 date: transaction.date
             }, {
                 where: {
@@ -162,7 +159,7 @@ const deleteTransaction = async (req, res, next) => {
         const transaction = await Transnaction.findByPk(transactionId);
 
         if (transaction) {
-            const deletedTransaction = Transnaction.destroy({
+            await Transnaction.destroy({
                 where: {
                     id: transaction.id
                 }
