@@ -70,6 +70,7 @@ async function jwtcreate(userData){
     }
 }
 function validateToken(req,res,next){
+    
     const token = req.cookies.token
 
     if(!token){

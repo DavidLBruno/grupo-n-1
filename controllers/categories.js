@@ -87,7 +87,9 @@ module.exports = {
     try {
       const category = await Category.findByPk(id);
       if (!category) throw new ErrorObject("The category doesn't exist!",404);
-      await category.destroy();
+      await category.destroy({
+        where: {id}
+      })
       endpointResponse({
         res,
         message: `Category #${id} deleted!`,
