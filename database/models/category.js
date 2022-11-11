@@ -8,16 +8,6 @@ const {
  *   - name: Category
  *     description: Operations about categories
  * components:
- *  securitySchemes:
- *    bearerAuth:
- *      type: http
- *      scheme: bearer
- *      bearerFormat: JWT
- *  responses:
- *    UnauthorizedError:
- *      description: Access token is missing or invalid
- *    ForbbidenError:
- *      description: You don't have access!
  *  schemas:
  *   Category:
  *    type: object
