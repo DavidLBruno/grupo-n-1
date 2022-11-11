@@ -3,7 +3,7 @@ const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
 const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
-const {authResponse,providerResponse,deleteCookie} = require("../helpers/authResponse");
+const {authResponse } = require("../helpers/authResponse");
 
 module.exports = {
 
@@ -77,7 +77,6 @@ module.exports = {
                 password: password
 
             })
-
             endpointResponse({
                 res,
                 message: 'user created successfully',
@@ -123,24 +122,31 @@ module.exports = {
 
     }),
     detail: catchAsync(async (req, res, next) =>{
-
-            await Usuario.findByPk(req.params.id)
-            .then(function (user) {
-                if(user){
-                    endpointResponse({
-                        res,
-                        message: 'Detail the user successfully',
-                        body: user
-                        });
-                }
-                else{
-                    const httpError = createHttpError(
-                        error.statusCode,
-                        `[Error user not found] - [Users - detail]: ${error.message} `,
-                    )
-                    next(httpError)
-                }
-              });
+            try{
+                await Usuario.findByPk(req.params.id)
+                .then(function (user) {
+                    if(user){
+                        endpointResponse({
+                            res,
+                            message: 'Detail the user successfully',
+                            body: user
+                            });
+                    }
+                    else{
+                        const httpError = createHttpError(
+                            404, `[Error user not found] - [Users - detail]`,
+                        )
+                        next(httpError)
+                    }
+                  });
+            }
+            catch(error){
+                const httpError = createHttpError(
+                    error.statusCode,
+                    ` ${error.message} `,
+                )
+                next(httpError)
+            }
               
       }),
 
@@ -262,19 +268,17 @@ module.exports = {
         }
     }),
 
-  servicioimagenpost: function (req, res, next) {
-    try{
-        endpointResponse({
+    servicioimagenpost: catchAsync((req, res, next) => {
+
+     endpointResponse({
             res,
             message: 'Image upgrade successfully',
             body: "",
         })
-    }catch(error){
         const httpError = createHttpError(
             error.statusCode,
             `[Error creating user] - [Users - create]: ${error.message} `,
         )
         next(httpError)
-    }
-  },
+    })
 }
