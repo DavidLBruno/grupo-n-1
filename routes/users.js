@@ -9,6 +9,7 @@ const {
   login,
 } = require("../controllers/users");
 const { validateCreate, validateToken } = require("../middlewares/index");
+const { checkOwnwerId } = require("../middlewares/ownership") 
 
 const router = express.Router();
 
@@ -132,7 +133,7 @@ router.get("/", validateToken, list);
  *      "404":
  *        description: The user doesn't exist!
  */
-router.get("/:id", detail);
+router.get("/:id", validateToken, checkOwnwerId, detail);
 
 /**
  * @swagger
@@ -182,7 +183,7 @@ router.get("/:id", detail);
  *      "404":
  *        description: The user doesn't exist!
  */
-router.put("/update/:id", update);
+router.put("/update/:id", validateToken, checkOwnwerId, update);
 
 router.post("/login", login);
 /**
@@ -228,7 +229,7 @@ router.post("/login", login);
  *      "404":
  *        description: The user doesn't exist!
  */
-router.delete("/delete/:id", deleteU);
+router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
 router.post("/imagen", servicioimagenpost);
 
 module.exports = router;
