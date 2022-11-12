@@ -32,7 +32,7 @@ const isAdmin  = async (id) => {
         return false;
     }
 };
-estandarizar
+
 
 module.exports = { 
     encrypt,
