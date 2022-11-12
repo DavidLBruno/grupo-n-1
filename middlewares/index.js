@@ -36,8 +36,6 @@ const isAdmin  = async (id) => {
 
 module.exports = { 
     encrypt,
-    validateCreate,
-    validateTrans,
     isAdmin,
     compare,
 };
