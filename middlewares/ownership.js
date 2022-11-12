@@ -1,7 +1,8 @@
-const createHttpError = require("http-errors")
-const { Usuario, Transnaction } = require("../database/models")
-const { development } = require("../config/config")
-const jws = require("jsonwebtoken")
+const createHttpError = require("http-errors");
+const { Usuario, Transnaction } = require("../database/models");
+const { development } = require("../config/config");
+const jws = require("jsonwebtoken");
+
 
 const checkOwnwerId = async (req, res, next) => {
     const { id } = req.params;
@@ -23,8 +24,6 @@ const checkOwnwerId = async (req, res, next) => {
         )
         next(httpError)
     }
-
-
 };
 
 const checkOwnwerTransaction = async (req, res, next) => {
@@ -40,7 +39,6 @@ const checkOwnwerTransaction = async (req, res, next) => {
             })
         };
         next();
-
     } catch (error) {
         const httpError = createHttpError(
             error.statusCode,
@@ -48,10 +46,7 @@ const checkOwnwerTransaction = async (req, res, next) => {
         )
         next(httpError)
     }
-
-
-}
-
+};
 
 
 module.exports = { checkOwnwerId, checkOwnwerTransaction  }

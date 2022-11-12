@@ -8,6 +8,7 @@ const { verifyToken }  = require("../middlewares/index");
 
 chai.use(chaiHTTP);
 
+<<<<<<< HEAD
 //all user
 suite("Tests for Users Routes", function () {
 
@@ -27,12 +28,20 @@ suite("Tests for Users Routes", function () {
 
   let token;
   
+=======
+
+//all user
+suite("Tests for Users Routes", function () {
+
+    let token;
+>>>>>>> c2ff1343120912994b4c9ae3d7ad30b61e4a5ec8
 
 test("Login",(done) => {
     chai
       .request(server)
       .post("/user/login")
       .send({
+<<<<<<< HEAD
         email: "diegoborja09@gmail.com",
         password: "123456",
       })
@@ -40,10 +49,17 @@ test("Login",(done) => {
         console.log(res.headers['Cookie'])
         token = res.headers['Cookie']
 
+=======
+        email: "Bruno_nada@hotmail.com",
+        password: "123",
+      })
+      .end((err, res) => {
+>>>>>>> c2ff1343120912994b4c9ae3d7ad30b61e4a5ec8
         done();
       });
       
   });
+<<<<<<< HEAD
   
   test("user", function (done) {+
     
@@ -55,7 +71,24 @@ test("Login",(done) => {
         assert.equal(res.status, 200);
         assert.equal(res.body.message, "list the user successfully");
         done()
+=======
+
+  suite("user", function (done) {
+    chai
+      .request(server)
+      .get(`/user/?page=1`)
+      .send(token)
+      .end((err, res) => {
+        assert(res.status, 403);
+        assert.equal(res.status, 200);
+        assert.equal(res.body.message, "list the user successfully");
+        done();
+>>>>>>> c2ff1343120912994b4c9ae3d7ad30b61e4a5ec8
       });
   });
 })
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c2ff1343120912994b4c9ae3d7ad30b61e4a5ec8
