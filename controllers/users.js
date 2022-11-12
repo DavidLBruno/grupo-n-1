@@ -3,7 +3,7 @@ const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
 const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
 const { endpointResponse } = require("../helpers/success");
-const {authResponse } = require("../helpers/authResponse");
+
 
 module.exports = {
 
@@ -40,7 +40,11 @@ module.exports = {
             }
 
             const login = await jwtcreate(userData)
-            return authResponse(res,login,401)
+            endpointResponse({
+                res,
+                message: 'Login successfully',
+                body: login,
+            })
         } catch (error) {
             const httpError = createHttpError(
                 error.statusCode,
