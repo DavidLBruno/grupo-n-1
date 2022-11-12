@@ -7,54 +7,83 @@ const { suite, test } = require("mocha");
 chai.use(chaiHTTP);
 
 
+//all category
 
-suite("Tests for Categories Routes", function () {
-  const testReqBody = {
-    name: "testCategory",
-    description: "testCategory",
-  };
-  before((done) => {
+test("Get All Category", function (done) {
     chai
       .request(server)
-      .get("/categories")
+      .get(`/categories/`)
       .end((err, res) => {
+        assert.equal(res.status, 200);
+        assert.equal(res.body.message, "All Categories");
         done();
       });
-  })
+  });
+
+  //create category
+
+  const createCategory = {
+    name: "Incomes",
+    description: "Ingreso",
+  };
+
+  suite("create Category ", function () {
+    test("succesfull creation of category", function (done) {
+      chai
+        .request(server)
+        .post("/categories")
+        .send(createCategory)
+        .end((err, res) => {
+          assert(res.status, 500);
+          assert.equal(res.status, 200);
+          assert.equal(res.body.message, 'Category created successfully');
+          done();
+        });
+    })
 })
 
+//Update category
 
+const updatCategory = {
+    id: 6,
+    name: "Outcomes",
+    description: "Egreso",
+  };
 
-
-
-suite("Tests for Categories Routes", function () {
-    const testReqBody = {
-      name: "testTransactions",
-      description: "testTransactions",
-    };
-    before((done) => {
+  suite("Update Category ", function () {
+    test("succesfull update of category", function (done) {
       chai
         .request(server)
-        .get("/transactions")
+        .put("/categories/"+updatCategory.id)
+        .send(updatCategory)
         .end((err, res) => {
+          assert(res.status, 500);
+          assert.equal(res.status, 200);
+          assert.equal(res.body.message, `Category #${updatCategory.id} updated!`);
           done();
         });
     })
-  })
+})
 
+//delete category
 
-
-  suite("Tests for Categories Routes", function () {
-    const testReqBody = {
-      name: "testUser",
-      description: "testUser",
-    };
-    before((done) => {
+const deleteCategory = {
+    id: 9,
+    name: "Incomes",
+    description: "Ingreso",
+  };
+  suite("Deleted Category ", function () {
+    test("succesfull Deleted of category", function (done) {
       chai
         .request(server)
-        .get("/user")
+        .delete("/categories/"+deleteCategory.id)
+        .send(deleteCategory)
         .end((err, res) => {
+          assert(res.status, 500);
+          assert.equal(res.status, 200);
+          assert.equal(res.body.message, `Category #${deleteCategory.id} deleted!`,);
           done();
         });
     })
-  })
+})
+
