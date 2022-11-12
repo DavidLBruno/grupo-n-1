@@ -24,8 +24,6 @@ const checkOwnwerId = async (req, res, next) => {
         )
         next(httpError)
     }
-
-
 };
 
 const checkOwnwerTransaction = async (req, res, next) => {
@@ -41,7 +39,6 @@ const checkOwnwerTransaction = async (req, res, next) => {
             })
         };
         next();
-
     } catch (error) {
         const httpError = createHttpError(
             error.statusCode,
@@ -49,8 +46,6 @@ const checkOwnwerTransaction = async (req, res, next) => {
         )
         next(httpError)
     }
-
-
 };
 
 

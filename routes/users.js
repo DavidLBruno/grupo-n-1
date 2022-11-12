@@ -9,7 +9,7 @@ const {
   login,
 } = require("../controllers/users");
 const { checkOwnwerId } = require("../middlewares/ownership"); 
-const { validateCreate } = require("../middlewares/index");
+const { validateCreate } = require("../middlewares/validate");
 const { imagen } = require("../middlewares/storage-image");
 const { validateToken } = require("../middlewares/tokens");
 
