@@ -2,8 +2,6 @@ const bcrypt = require("bcrypt");
 const createHttpError = require("http-errors");
 const { checkSchema } = require("express-validator");
 const { ValidationResult } = require("../helpers/validate");
-const jwt = require("jsonwebtoken");
-const { development } = require("../config/config");
 const path = require("path");
 const multer = require("multer");
 
@@ -51,48 +49,6 @@ async function compare(string,hash){
         return await bcrypt.compare(string,hash)
     } catch (error) {
         return false
-    }
-};
-
-async function jwtcreate(userData){
-    const token = jwt.sign(userData,development.jwtSecret,{
-        expiresIn:'1d'
-    })
-    return {
-        success:true,
-        user:userData,
-        token
-    }
-};
-
-function validateToken(req,res,next){
-    
-    const token = req.cookies.token
-
-    if(!token){
-        return res.status(403).json({
-            success:false,
-            message:"A token is required for this process"
-        })
-    }
-
-    return verifyToken(token,req,res,next)
-};
-
-function verifyToken(token,req,res,next){
-    try{
-        const decoded = jwt.verify(token,development.jwtSecret)
-        delete decoded.iat
-        delete decoded.exp
-        req.user = decoded
-
-        return next()
-    }catch({message,name}){
-        return res.status(403).json({
-            success:false,
-            message,
-            type:name
-        })
     }
 };
 
@@ -202,8 +158,6 @@ module.exports = {
     validateCreate, 
     validateTrans, 
     isAdmin, 
-    jwtcreate, 
-    compare, 
-    validateToken, 
+    compare,  
     imagen
 };

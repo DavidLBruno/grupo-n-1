@@ -1,7 +1,8 @@
 const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
-const { encrypt, compare, jwtcreate } = require("../middlewares/index");
+const { encrypt, compare} = require("../middlewares/index");
+const { jwtcreate } = require("../middlewares/tokens");
 const { getPaginatedData } = require("../middlewares/paginate");
 const { endpointResponse } = require("../helpers/success");
 const {authResponse } = require("../helpers/authResponse");

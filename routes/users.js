@@ -8,11 +8,11 @@ const {
   servicioimagenpost,
   login,
 } = require("../controllers/users");
-const { checkOwnwerId } = require("../middlewares/ownership") 
-const { validateCreate, validateToken, imagen } = require("../middlewares/index");
+const { checkOwnwerId } = require("../middlewares/ownership"); 
+const { validateCreate, imagen } = require("../middlewares/index");
+const { validateToken } = require("../middlewares/tokens");
 
 const router = express.Router();
-
 
 router.post("/login", login);
 /**
@@ -58,8 +58,6 @@ router.post("/login", login);
  *      "404":
  *        description: The user doesn't exist!
  */
-
-
 
 /**
  * @swagger
@@ -234,6 +232,8 @@ router.get("/:id", validateToken, checkOwnwerId, detail);
 router.put("/update/:id", validateToken, checkOwnwerId, update);
 
 router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
+
 router.post("/imagen", imagen ,servicioimagenpost);
+
 
 module.exports = router;
