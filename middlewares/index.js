@@ -1,12 +1,11 @@
-const bcrypt = require("bcrypt")
-const createHttpError = require('http-errors')
-const { checkSchema } = require('express-validator')
-const { ValidationResult } = require('../helpers/validate')
-const jwt = require("jsonwebtoken")
-const { development } = require("../config/config")
-const path = require('path')
+const bcrypt = require("bcrypt");
+const createHttpError = require("http-errors");
+const { checkSchema } = require("express-validator");
+const { ValidationResult } = require("../helpers/validate");
+const jwt = require("jsonwebtoken");
+const { development } = require("../config/config");
+const path = require("path");
 const multer = require("multer");
-
 
 
 const storage = multer.diskStorage({
@@ -16,7 +15,7 @@ const storage = multer.diskStorage({
       let imageName = Date.now() + "-" + path.extname(file.originalname);
       cb(null, imageName)
     }
-  })
+});
   
   const imagen = multer({
     storage,
@@ -30,11 +29,7 @@ const storage = multer.diskStorage({
       }
       cb("Debe ser una imagen valida")
      }
-  }).single("image")
-
-
-
-
+}).single("image");
 
 async function encrypt(password) {
     try {
@@ -49,7 +44,7 @@ async function encrypt(password) {
         )
         next(httpError)
     }
-}
+};
 
 async function compare(string,hash){
     try {
@@ -57,7 +52,7 @@ async function compare(string,hash){
     } catch (error) {
         return false
     }
-}
+};
 
 async function jwtcreate(userData){
     const token = jwt.sign(userData,development.jwtSecret,{
@@ -68,7 +63,8 @@ async function jwtcreate(userData){
         user:userData,
         token
     }
-}
+};
+
 function validateToken(req,res,next){
     
     const token = req.cookies.token
@@ -81,7 +77,7 @@ function validateToken(req,res,next){
     }
 
     return verifyToken(token,req,res,next)
-}
+};
 
 function verifyToken(token,req,res,next){
     try{
@@ -98,7 +94,7 @@ function verifyToken(token,req,res,next){
             type:name
         })
     }
-}
+};
 
 const validateCreate = [
     checkSchema({
@@ -142,8 +138,7 @@ const validateCreate = [
     }
 
 
-]
-
+];
 
 const validateTrans = [
     checkSchema({
@@ -191,7 +186,8 @@ const validateTrans = [
     (req, res, next) => {
         ValidationResult(req, res, next)
     }
-]
+];
+
 const isAdmin  = async (id) => {
     if(id == 1){
         return true;
@@ -199,34 +195,15 @@ const isAdmin  = async (id) => {
         return false;
     }
 };
-async function getPaginatedData(req, db) {
-    
-    let page = +req.query.page;
-
-    if(isNaN(page) || page < 1){
-        return null;
-    }
-    page=page-1
-   
-    const originalUrl = req.originalUrl;
-    const urlBase = originalUrl.slice(0, originalUrl.indexOf("?"));
-    const offset= page*10;
-    const usuarios = await db.count();
-    
-    let nextPage = `${urlBase}?page=${page+2}`;
-    let prevPage= `${urlBase}?page=${page}`;
-
-    if(page == 0){
-        prevPage = "No hay paguina anterior para mostrar"
-    }
-
-    let list = await db.findAll({limit: 10 ,offset:offset})
-
-    if(offset+10 > usuarios){
-        nextPage="No hay paguina siguiente"
-    }   
-    return {list, nextPage, prevPage}
-}
 
 
-module.exports = { encrypt, validateCreate, validateTrans, isAdmin, getPaginatedData,jwtcreate,compare,validateToken, imagen}
+module.exports = { 
+    encrypt, 
+    validateCreate, 
+    validateTrans, 
+    isAdmin, 
+    jwtcreate, 
+    compare, 
+    validateToken, 
+    imagen
+};
