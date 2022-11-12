@@ -8,7 +8,7 @@ function authResponse(res,result,statusCode){
             httpOnly:true,
             secure:development.production, //Solo disponible a través de https*
             expires:new Date(new Date().setDate(new Date().getDate() + 1))
-        }).json(data)
+        }).json(result)
     }
 
 
