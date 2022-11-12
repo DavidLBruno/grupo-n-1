@@ -11,7 +11,7 @@ const {
 const { imagen } = require("../middlewares/storage-image");
 const { validateToken } = require("../middlewares/tokens");
 const { checkOwnwerId } = require("../middlewares/ownership") 
-const { validateCreate, validateToken, imagen } = require("../middlewares/index");
+const { validateCreate} = require("../middlewares/validate");
 
 const router = express.Router();
 
@@ -234,7 +234,8 @@ router.put("/update/:id", validateToken, checkOwnwerId, update);
 
 router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
 
-=======
+
+
 /**
  * @swagger
  * /user/login:
