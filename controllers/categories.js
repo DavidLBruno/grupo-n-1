@@ -4,7 +4,9 @@ const { Category } = require("../database/models");
 const { endpointResponse } = require("../helpers/success");
 const { ErrorObject } = require("../helpers/error");
 
+
 module.exports = {
+
   getCategories: catchAsync(async (_req, res, next) => {
     try {
       const categories = await Category.findAll();
@@ -21,6 +23,7 @@ module.exports = {
       next(httpError);
     }
   }),
+
   createCategory: catchAsync(async (req, res, next) => {
     const { name, description } = req.body;
 
@@ -40,6 +43,7 @@ module.exports = {
       next(httpError);
     }
   }),
+
   getCategoryById: catchAsync(async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -58,6 +62,7 @@ module.exports = {
       next(httpError);
     }
   }),
+
   updateCategory: catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { name, description } = req.body;
@@ -82,6 +87,7 @@ module.exports = {
       next(httpError);
     }
   }),
+
   deleteCategory: catchAsync(async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -103,4 +109,5 @@ module.exports = {
       next(httpError);
     }
   }),
-};
+
+}
