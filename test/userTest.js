@@ -4,15 +4,16 @@ const { assert } = require("chai");
 const server = require("../app");
 const { suite, test } = require("mocha");
 const { checkOwnwerId } = require("../middlewares/ownership");
-const { verifyToken }  = require("../middlewares/index");
+const { verifyToken, validateToken }  = require("../middlewares/index");
+const jwt = require("jsonwebtoken")
+const { development, jwtSecret } = require("../config/config")
+require("dotenv").config();
 
 chai.use(chaiHTTP);
 
 
-//all user
-suite("Tests for Users Routes", function () {
 
-    let token;
+//all user
 
 test("Login",(done) => {
     chai
@@ -28,14 +29,16 @@ test("Login",(done) => {
       
   });
 
-  suite("user", function (done) {
+  suite("Tests for Users Routes", function () {
+
+  test("user", function (done) {
     chai
       .request(server)
       .get(`/user/?page=1`)
-      .send(token)
-      .end((err, res) => {
+      .set("cookie", `${process.env.JWT_SECRET}`)
+      .end((err, res,) => {
         assert(res.status, 403);
-        assert.equal(res.status, 200);
+        assert.equal(res.status, 403);
         assert.equal(res.body.message, "list the user successfully");
         done();
       });

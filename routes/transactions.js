@@ -16,12 +16,12 @@ const router = express.Router();
  * /transactions:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Finds all Transactions
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -63,7 +63,7 @@ const router = express.Router();
  *                        type: integer
  *                        format: int64
  *                        example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
  */
 router.get("/", validateToken, getTransaction);
@@ -72,7 +72,7 @@ router.get("/", validateToken, getTransaction);
  * /transactions:
  *  post:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Make a new Transaction
@@ -146,11 +146,11 @@ router.get("/", validateToken, getTransaction);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
  *      "404":
  *        description: The transaction doesn't exist!
- *      "405":
+ *      405:
  *        description: Invalid input
  */
 router.post("/", validateToken, createTransaction);
@@ -160,7 +160,7 @@ router.post("/", validateToken, createTransaction);
  * /transactions/{id}:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Finds Transactions by id
@@ -173,7 +173,7 @@ router.post("/", validateToken, createTransaction);
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -219,9 +219,9 @@ router.post("/", validateToken, createTransaction);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
@@ -233,7 +233,7 @@ router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
  * /transactions/{id}:
  *  put:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Update Transaction by id
@@ -275,7 +275,7 @@ router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
  *                example: 1
  *      required: true
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -321,9 +321,9 @@ router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
@@ -334,7 +334,7 @@ router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById)
  * /transactions/{id}:
  *  delete:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Transactions
  *    summary: Delete Transactions by id
@@ -347,7 +347,7 @@ router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById)
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -393,9 +393,9 @@ router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById)
  *                      type: integer
  *                      format: int64
  *                      example: 1
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The transaction doesn't exist!
