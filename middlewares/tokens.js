@@ -15,7 +15,7 @@ async function jwtcreate(userData){
 
 function validateToken(req,res,next){
     
-    const token = req.cookies.token
+    const token = req.headers['token']
 
     if(!token){
         return res.status(403).json({

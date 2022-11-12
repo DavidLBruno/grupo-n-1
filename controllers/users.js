@@ -5,7 +5,7 @@ const { encrypt, compare} = require("../middlewares/index");
 const { jwtcreate } = require("../middlewares/tokens");
 const { getPaginatedData } = require("../middlewares/paginate");
 const { endpointResponse } = require("../helpers/success");
-const {authResponse } = require("../helpers/authResponse");
+
 
 module.exports = {
 
@@ -41,7 +41,11 @@ module.exports = {
             }
 
             const login = await jwtcreate(userData)
-            return authResponse(res,login,401)
+            endpointResponse({
+                res,
+                message: 'Login successfully',
+                body: login,
+            })
         } catch (error) {
             const httpError = createHttpError(
                 error.statusCode,
