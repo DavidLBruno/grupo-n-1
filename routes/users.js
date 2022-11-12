@@ -9,7 +9,8 @@ const {
   login,
 } = require("../controllers/users");
 const { checkOwnwerId } = require("../middlewares/ownership"); 
-const { validateCreate, imagen } = require("../middlewares/index");
+const { validateCreate } = require("../middlewares/index");
+const { imagen } = require("../middlewares/storage-image");
 const { validateToken } = require("../middlewares/tokens");
 
 const router = express.Router();
