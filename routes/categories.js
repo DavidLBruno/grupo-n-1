@@ -14,12 +14,12 @@ const router = express.Router();
  * /categories:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Category
  *    summary: Finds all Categories
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -39,9 +39,9 @@ const router = express.Router();
  *                  type: array
  *                  items:
  *                    $ref: "#/components/schemas/Category"
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  */
 router.get("/", getCategories);
@@ -51,7 +51,7 @@ router.get("/", getCategories);
  * /categories:
  *  post:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Category
  *    summary: Create new Category
@@ -81,11 +81,11 @@ router.get("/", getCategories);
  *                  example: Create Category
  *                body:
  *                  $ref: "#/components/schemas/Category"
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
- *      "405":
+ *      405:
  *        description: Invalid input
  */
 router.post("/", createCategory);
@@ -95,7 +95,7 @@ router.post("/", createCategory);
  * /categories/{id}:
  *  get:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Category
  *    summary: Finds Category by id
@@ -108,7 +108,7 @@ router.post("/", createCategory);
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -126,9 +126,9 @@ router.post("/", createCategory);
  *                  example: Category \#1
  *                body:
  *                  $ref: "#/components/schemas/Category"
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The category doesn't exist!
@@ -139,7 +139,7 @@ router.get("/:id", getCategoryById);
  * /categories/{id}:
  *  put:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Category
  *    summary: Update Category by id
@@ -159,7 +159,7 @@ router.get("/:id", getCategoryById);
  *            $ref: "#/components/schemas/Category"
  *      required: true
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -177,9 +177,9 @@ router.get("/:id", getCategoryById);
  *                  example: Category \#1
  *                body:
  *                  $ref: "#/components/schemas/Category"
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The category doesn't exist!
@@ -191,7 +191,7 @@ router.put("/:id", updateCategory);
  * /categories/{id}:
  *  delete:
  *    security:
- *      - bearerAuth: []
+ *      - api_key: []
  *    tags:
  *      - Category
  *    summary: Delete Category by id
@@ -204,7 +204,7 @@ router.put("/:id", updateCategory);
  *          type: integer
  *          format: int64
  *    responses:
- *      "200":
+ *      200:
  *        description: successful operation
  *        content:
  *          application/json:
@@ -222,9 +222,9 @@ router.put("/:id", updateCategory);
  *                  example: Category \#1
  *                body:
  *                  $ref: "#/components/schemas/Category"
- *      "401":
+ *      401:
  *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
+ *      403:
  *        $ref: "#/components/responses/ForbbidenError"
  *      "404":
  *        description: The category doesn't exist!

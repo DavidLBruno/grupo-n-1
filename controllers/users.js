@@ -1,12 +1,13 @@
 const createHttpError = require("http-errors");
 const { catchAsync } = require("../helpers/catchAsync");
 const { Usuario } = require("../database/models");
-const { encrypt, getPaginatedData,compare,jwtcreate } = require("../middlewares/index");
+const { encrypt, compare} = require("../middlewares/index");
+const { jwtcreate } = require("../middlewares/tokens");
+const { getPaginatedData } = require("../middlewares/paginate");
 const { endpointResponse } = require("../helpers/success");
-const {authResponse,providerResponse,deleteCookie} = require("../helpers/authResponse");
+
 
 module.exports = {
-
 
     login:catchAsync(async (req, res, next) =>{
         try {
@@ -40,7 +41,11 @@ module.exports = {
             }
 
             const login = await jwtcreate(userData)
-            return authResponse(res,login,401)
+            endpointResponse({
+                res,
+                message: 'Login successfully',
+                body: login,
+            })
         } catch (error) {
             const httpError = createHttpError(
                 error.statusCode,
@@ -121,6 +126,7 @@ module.exports = {
             }
 
     }),
+
     detail: catchAsync(async (req, res, next) =>{
             try{
                 await Usuario.findByPk(req.params.id)
@@ -148,10 +154,7 @@ module.exports = {
                 next(httpError)
             }
               
-      }),
-
-   
-
+    }),
 
     update: catchAsync(async (req, res, next) => {
         const { firstName, lastName, email} = req.body
@@ -223,7 +226,6 @@ module.exports = {
         }
     }),
 
-
     deleteU: catchAsync(async (req, res, next) => {
         const id = req.params.id
 
@@ -281,4 +283,5 @@ module.exports = {
         )
         next(httpError)
     })
-}
+    
+};

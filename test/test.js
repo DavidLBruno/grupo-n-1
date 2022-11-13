@@ -50,7 +50,6 @@ const updatCategory = {
     description: "Egreso",
   };
 
-
   suite("Update Category ", function () {
     test("succesfull update of category", function (done) {
       chai
@@ -68,16 +67,11 @@ const updatCategory = {
 
 //delete category
 
-
-
-
 const deleteCategory = {
-    id: 8,
+    id: 9,
     name: "Incomes",
     description: "Ingreso",
   };
-
-
   suite("Deleted Category ", function () {
     test("succesfull Deleted of category", function (done) {
       chai
