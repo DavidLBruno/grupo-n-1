@@ -8,10 +8,13 @@ const {
   servicioimagenpost,
   login,
 } = require("../controllers/users");
+const { imagen } = require("../middlewares/storage-image");
+const { validateToken } = require("../middlewares/tokens");
 const { checkOwnwerId } = require("../middlewares/ownership") 
-const { validateCreate, validateToken, imagen } = require("../middlewares/index");
+const { validateCreate} = require("../middlewares/validate");
 
 const router = express.Router();
+
 
 /**
  * @swagger
@@ -305,5 +308,6 @@ router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
  *      description: Format not supported
  */
 router.post("/imagen", imagen ,servicioimagenpost);
+
 
 module.exports = router;

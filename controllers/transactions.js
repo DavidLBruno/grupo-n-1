@@ -1,8 +1,8 @@
-const { isAdmin } = require('../middlewares/index')
-const createHttpError = require('http-errors');
-const { Transnaction } = require('../database/models');
-const { getPaginatedData } = require("../middlewares/index");
-const { endpointResponse } = require('../helpers/success');
+const { isAdmin } = require("../middlewares/index");
+const createHttpError = require("http-errors");
+const { Transnaction } = require("../database/models");
+const { getPaginatedData } = require("../middlewares/paginate");
+const { endpointResponse } = require("../helpers/success");
 
 
 const getTransaction = async (req, res, next) => {
@@ -57,7 +57,7 @@ const getTransaction = async (req, res, next) => {
         );
         next(httpError);
     };
-}
+};
 
 const getTransactionById = async (req, res, next) => {
     try {
@@ -84,7 +84,7 @@ const getTransactionById = async (req, res, next) => {
         );
         next(httpError);
     };
-}
+};
 
 const createTransaction = async (req, res, next) => {
     try {
@@ -182,7 +182,7 @@ const deleteTransaction = async (req, res, next) => {
         );
         next(httpError);
     }
-}
+};
 
 
 module.exports = {
@@ -191,4 +191,4 @@ module.exports = {
     createTransaction,
     updateTransactionById,
     deleteTransaction
-}
+};

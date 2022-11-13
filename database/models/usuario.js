@@ -9,8 +9,8 @@ const { Model } = require("sequelize");
  *  securitySchemes:
  *    api_key:
  *     type: apiKey
- *     name: JWT_SECRET
- *     in: cookie
+ *     name: token
+ *     in: header
  *  responses:
  *    UnauthorizedError:
  *      description: Access token is missing or invalid

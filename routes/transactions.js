@@ -6,7 +6,7 @@ const {
   updateTransactionById,
   deleteTransaction,
 } = require("../controllers/transactions");
-const { validateToken } = require("../middlewares/index");
+const { validateToken } = require("../middlewares/tokens");
 const { checkOwnwerTransaction } = require("../middlewares/ownership")
 
 const router = express.Router();
@@ -67,6 +67,7 @@ const router = express.Router();
  *        $ref: "#/components/responses/UnauthorizedError"
  */
 router.get("/", validateToken, getTransaction);
+
 /**
  * @swagger
  * /transactions:
@@ -329,6 +330,7 @@ router.get("/:id", validateToken, checkOwnwerTransaction, getTransactionById);
  *        description: The transaction doesn't exist!
  */
 router.put("/:id", validateToken, checkOwnwerTransaction, updateTransactionById);
+
 /**
  * @swagger
  * /transactions/{id}:
