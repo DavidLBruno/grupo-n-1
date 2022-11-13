@@ -15,57 +15,13 @@ const { validateCreate} = require("../middlewares/validate");
 
 const router = express.Router();
 
-router.post("/login", login);
-/**
- * @swagger
- * /user/delete/{id}:
- *  delete:
- *    security:
- *      - bearerAuth: []
- *    tags:
- *      - Users
- *    summary: Delete User by id
- *    parameters:
- *      - name: id
- *        in: path
- *        description: ID of user to delete
- *        required: true
- *        schema:
- *          type: integer
- *          format: int64
- *    responses:
- *      "200":
- *        description: successful operation
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                status:
- *                  type: string
- *                  example: true
- *                code:
- *                  type: integer
- *                  example: 200
- *                message:
- *                  type: string
- *                  example: User \#1
- *                body:
- *                  $ref: "#/components/schemas/User"
- *      "401":
- *        $ref: "#/components/responses/UnauthorizedError"
- *      "403":
- *        $ref: "#/components/responses/ForbbidenError"
- *      "404":
- *        description: The user doesn't exist!
- */
 
 /**
  * @swagger
  * /user:
  *  get:
  *    security:
- *      - api_key: []
+ *      - bearerAuth: []
  *    tags:
  *      - Users
  *    summary: Finds all Users paginated
@@ -78,7 +34,7 @@ router.post("/login", login);
  *         type: integer
  *         format: int64
  *    responses:
- *      200:
+ *      "200":
  *        description: successful operation
  *        content:
  *          application/json:
@@ -98,7 +54,7 @@ router.post("/login", login);
  *                  type: array
  *                  items:
  *                    $ref: "#/components/schemas/User"
- *      401:
+ *      "401":
  *        $ref: "#/components/responses/UnauthorizedError"
  */
 router.get("/", validateToken, list);
@@ -136,7 +92,7 @@ router.get("/", validateToken, list);
  *                  example: Create User
  *                body:
  *                  $ref: "#/components/schemas/User"
- *      405:
+ *      "405":
  *        description: Invalid input
  */
  router.post("/create", validateCreate, create);
@@ -146,7 +102,7 @@ router.get("/", validateToken, list);
  * /user/{id}:
  *  get:
  *    security:
- *      - api_key: []
+ *      - bearerAuth: []
  *    tags:
  *      - Users
  *    summary: Finds User by id
@@ -159,7 +115,7 @@ router.get("/", validateToken, list);
  *          type: integer
  *          format: int64
  *    responses:
- *      200:
+ *      "200":
  *        description: successful operation
  *        content:
  *          application/json:
@@ -187,7 +143,7 @@ router.get("/:id", validateToken, checkOwnwerId, detail);
  * /user/update/{id}:
  *  put:
  *    security:
- *      - api_key: []
+ *      - bearerAuth: []
  *    tags:
  *      - Users
  *    summary: Update User by id
@@ -207,7 +163,7 @@ router.get("/:id", validateToken, checkOwnwerId, detail);
  *            $ref: "#/components/schemas/User"
  *      required: true
  *    responses:
- *      200:
+ *      "200":
  *        description: successful operation
  *        content:
  *          application/json:
@@ -225,16 +181,12 @@ router.get("/:id", validateToken, checkOwnwerId, detail);
  *                  example: User \#1
  *                body:
  *                  $ref: "#/components/schemas/User"
- *      401:
+ *      "401":
  *        $ref: "#/components/responses/UnauthorizedError"
  *      "404":
  *        description: The user doesn't exist!
  */
 router.put("/update/:id", validateToken, checkOwnwerId, update);
-
-router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
-
-
 
 /**
  * @swagger
@@ -323,38 +275,6 @@ router.post("/login", login);
  *        description: The user doesn't exist!
  */
 router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
-
-/**
- * @swagger
- * /user/imagen:
- *  post:
- *   security:
- *      - api_key: []
- *   tags:
- *      - Users
- *   summary: Upload image
- *   requestBody:
- *    content:
- *      imagen:
- *        schema:
- *          type: string
- *          format: binary
- *   responses:
- *     200:
- *      description: successful operation
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              message:
- *                type: string
- *                example: Image upgrade successfully
- *     401:
- *      $ref: "#/components/responses/UnauthorizedError"
- *     500:
- *      description: Format not supported
- */
 router.post("/imagen", imagen ,servicioimagenpost);
 
 
