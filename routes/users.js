@@ -8,8 +8,10 @@ const {
   servicioimagenpost,
   login,
 } = require("../controllers/users");
+const { imagen } = require("../middlewares/storage-image");
+const { validateToken } = require("../middlewares/tokens");
 const { checkOwnwerId } = require("../middlewares/ownership") 
-const { validateCreate, validateToken, imagen } = require("../middlewares/index");
+const { validateCreate} = require("../middlewares/validate");
 
 const router = express.Router();
 
@@ -186,7 +188,94 @@ router.get("/:id", validateToken, checkOwnwerId, detail);
  */
 router.put("/update/:id", validateToken, checkOwnwerId, update);
 
+/**
+ * @swagger
+ * /user/login:
+ *  post:
+ *    tags:
+ *      - Users
+ *    summary: Login user
+ *    requestBody:
+ *      description: Login payload
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: email@email.com
+ *              password:
+ *                type: string
+ *                example: contrasena
+ *    responses:
+ *      200:
+ *        description: successful operation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: string
+ *                  example: true
+ *                code:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: User \#1
+ *                body:
+ *                  $ref: "#/components/schemas/User"            
+ */
+router.post("/login", login);
+
+/**
+ * @swagger
+ * /user/delete/{id}:
+ *  delete:
+ *    security:
+ *      - api_key: []
+ *    tags:
+ *      - Users
+ *    summary: Delete User by id
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        description: ID of user to delete
+ *        required: true
+ *        schema:
+ *          type: integer
+ *          format: int64
+ *    responses:
+ *      200:
+ *        description: successful operation
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: string
+ *                  example: true
+ *                code:
+ *                  type: integer
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: User \#1
+ *                body:
+ *                  $ref: "#/components/schemas/User"
+ *      401:
+ *        $ref: "#/components/responses/UnauthorizedError"
+ *      403:
+ *        $ref: "#/components/responses/ForbbidenError"
+ *      "404":
+ *        description: The user doesn't exist!
+ */
 router.delete("/delete/:id", validateToken, checkOwnwerId, deleteU);
 router.post("/imagen", imagen ,servicioimagenpost);
+
 
 module.exports = router;

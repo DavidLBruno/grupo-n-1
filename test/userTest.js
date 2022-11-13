@@ -4,45 +4,58 @@ const { assert } = require("chai");
 const server = require("../app");
 const { suite, test } = require("mocha");
 const { checkOwnwerId } = require("../middlewares/ownership");
-const { verifyToken, validateToken }  = require("../middlewares/index");
-const jwt = require("jsonwebtoken")
-const { development, jwtSecret } = require("../config/config")
-require("dotenv").config();
+const { verifyToken }  = require("../middlewares/index");
 
 chai.use(chaiHTTP);
 
-
-
 //all user
+suite("Tests for Users Routes", function () {
+  const createBodyRequest = {
+    firstName: 'userCreate',
+    lastName: 'userCreate',
+    email: 'userCreate@email.com',
+    password: 'passwordCreate'
+    // lleva avatar??
+  }
+  const updateBodyRequest = {
+    email: 'updated@email.com',
+    firstName: 'updatedName',
+    lastName: 'updatedLastname',
+    password: 'passwordUpdate'
+  }
+  let token;
+})
+//all user
+suite("Tests for Users Routes", function () {
+
+    let token;
 
 test("Login",(done) => {
     chai
       .request(server)
       .post("/user/login")
       .send({
-        email: "Bruno_nada@hotmail.com",
-        password: "123",
+        email: "diegoborja09@gmail.com",
+        password: "123456",
       })
       .end((err, res) => {
+        console.log(res.headers['Cookie'])
+        token = res.headers['Cookie']
         done();
       });
       
   });
-
-  suite("Tests for Users Routes", function () {
-
-  test("user", function (done) {
+  suite("user", function (done) {
     chai
       .request(server)
       .get(`/user/?page=1`)
-      .set("cookie", `${process.env.JWT_SECRET}`)
-      .end((err, res,) => {
+      .set("Cookie",token)
+      .end((err, res) => {
         assert(res.status, 403);
-        assert.equal(res.status, 403);
+        assert.equal(res.status, 200);
         assert.equal(res.body.message, "list the user successfully");
         done();
       });
   });
 })
-
 
